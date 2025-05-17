@@ -1,1 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Cadastro - Infynix</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #000;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      font-size: 22px;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    form {
+      background-color: #111;
+      padding: 60px;
+      border-radius: 20px;
+      box-shadow: 0 0 25px red;
+      width: 90%;
+      max-width: 800px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 20px;
+      margin-top: 20px;
+      border: none;
+      border-radius: 10px;
+      font-size: 22px;
+    }
+    input, select {
+      background-color: #222;
+      color: #fff;
+    }
+    button {
+      background-color: red;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 30px;
+    }
+    h1 {
+      margin-bottom: 30px;
+      font-size: 38px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
 
+  <form id="cadastroForm">
+    <h1>Cadastro Infynix</h1>
+    <input type="text" id="nome" placeholder="Seu nome" required>
+    <input type="tel" id="telefone" placeholder="Seu telefone" required>
+    <input type="email" id="email" placeholder="Seu Gmail" required>
+    
+    <select id="tipo" required>
+      <option value="">Selecione o tipo de cadastro</option>
+      <option value="Revendedor">Quero ser revendedor</option>
+      <option value="Cliente">Quero ser cliente</option>
+    </select>
+    
+    <button type="submit">Cadastrar via WhatsApp</button>
+  </form>
+
+  <script>
+    document.getElementById('cadastroForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const nome = document.getElementById('nome').value;
+      const telefone = document.getElementById('telefone').value;
+      const email = document.getElementById('email').value;
+      const tipo = document.getElementById('tipo').value;
+      const dataCadastro = new Date().toLocaleDateString('pt-BR');
+
+      const mensagem = `Olá! Quero me cadastrar na Infynix.%0A` +
+                       `Nome: ${nome}%0A` +
+                       `Telefone: ${telefone}%0A` +
+                       `Gmail: ${email}%0A` +
+                       `Tipo: ${tipo}%0A` +
+                       `Data do cadastro: ${dataCadastro}`;
+
+      const link = `https://wa.me/message/S7DCBIS57QDDI1?text=${mensagem}`;
+
+      window.open(link, '_blank');
+    });
+  </script>
+
+</body>
+</html>
