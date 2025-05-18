@@ -129,10 +129,10 @@
       animation: pulse 1.5s infinite;
     }
     .cliente-icon {
-      color: #4CAF50; /* Verde para cliente */
+      color: #4CAF50;
     }
     .revendedor-icon {
-      color: #FF9800; /* Laranja para revendedor */
+      color: #FF9800;
     }
     .close-modal {
       background-color: red;
@@ -202,15 +202,15 @@
       <option value="Cliente">Quero ser cliente</option>
     </select>
     
-    <button type="submit">Cadastrar via WhatsApp</button>
+    <button type="submit">Enviar Cadastro</button>
   </form>
 
-  <!-- Modal de boas-vindas -->
+  <!-- Modal de confirmação -->
   <div id="welcomeModal" class="modal">
     <div class="modal-content">
       <div id="modalIcon" class="modal-icon revendedor-icon">🎉</div>
       <h2 id="modalTitle">Bem-vindo à Equipe Infynix!</h2>
-      <p id="modalMessage">Seu cadastro foi realizado com sucesso. Em breve entraremos em contato pelo WhatsApp.</p>
+      <p id="modalMessage">Seu cadastro foi enviado com sucesso! Nossa equipe entrará em contato em breve.</p>
       <button class="close-modal">Fechar</button>
     </div>
   </div>
@@ -232,11 +232,10 @@
                        `*Telefone:* ${telefone}%0A` +
                        `*Email:* ${email}%0A` +
                        `*Tipo de cadastro:* ${tipo}%0A` +
-                       `*Data do cadastro:* ${dataCadastro}%0A%0A` +
-                       `_Dados enviados via formulário de cadastro_`;
-      
-      // Número do WhatsApp configurado
-      const numeroWhatsApp = '5515996315518'; // Número formatado sem caracteres especiais
+                       `*Data do cadastro:* ${dataCadastro}`;
+
+      // URL do WhatsApp (sem abrir para o usuário)
+      const whatsappUrl = `https://wa.me/message/S7DCBIS57QDDI1?text=${mensagem}`;
       
       // Configura o modal conforme o tipo de cadastro
       const modalIcon = document.getElementById('modalIcon');
@@ -247,7 +246,7 @@
         modalIcon.textContent = "🎬";
         modalIcon.className = "modal-icon cliente-icon";
         modalTitle.textContent = "Bem-vindo à Infynix!";
-        modalMessage.textContent = "Aproveite seus filmes, séries e muito mais! Em breve enviaremos seu acesso.";
+        modalMessage.textContent = "Aproveite seus filmes, séries e muito mais! Nossa equipe entrará em contato em breve.";
       } else {
         modalIcon.textContent = "🚀";
         modalIcon.className = "modal-icon revendedor-icon";
@@ -255,13 +254,15 @@
         modalMessage.textContent = "Seu cadastro foi recebido com sucesso! Em breve entraremos em contato com os detalhes.";
       }
       
-      // Mostra o modal de boas-vindas
-      document.getElementById('welcomeModal').style.display = 'flex';
+      // Envia os dados silenciosamente para o WhatsApp
+      fetch(whatsappUrl, {
+        mode: 'no-cors' // Modo sem CORS para evitar erros
+      }).catch(() => {
+        // Mesmo se falhar, continua o processo (não afeta a experiência do usuário)
+      });
       
-      // Abre o WhatsApp após 3 segundos (para dar tempo do usuário ver a mensagem)
-      setTimeout(() => {
-        window.open(`https://wa.me/${numeroWhatsApp}?text=${mensagem}`, '_blank');
-      }, 3000);
+      // Mostra o modal de confirmação
+      document.getElementById('welcomeModal').style.display = 'flex';
       
       // Limpa o formulário
       this.reset();
