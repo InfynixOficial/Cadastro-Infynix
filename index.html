@@ -2,6 +2,7 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Cadastro - Infynix</title>
   <style>
     * {
@@ -13,7 +14,7 @@
       width: 100%;
       height: 100%;
       background-color: #000;
-      font-family: Arial, sans-serif;
+      font-family: 'Arial', sans-serif;
       color: #fff;
       font-size: 22px;
     }
@@ -21,26 +22,42 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 20px;
+      position: relative;
     }
     form {
       background-color: #111;
-      padding: 60px;
+      padding: 40px;
       border-radius: 20px;
-      box-shadow: 0 0 25px red;
-      width: 90%;
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
+      width: 100%;
       max-width: 800px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      z-index: 1;
+    }
+    form:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 35px rgba(255, 0, 0, 0.9);
     }
     input, select, button {
       width: 100%;
-      padding: 20px;
+      padding: 18px;
       margin-top: 20px;
       border: none;
       border-radius: 10px;
-      font-size: 22px;
+      font-size: 20px;
+      transition: all 0.3s ease;
     }
     input, select {
       background-color: #222;
       color: #fff;
+      border: 2px solid #333;
+    }
+    input:focus, select:focus {
+      outline: none;
+      border-color: red;
+      background-color: #333;
     }
     button {
       background-color: red;
@@ -48,21 +65,136 @@
       font-weight: bold;
       cursor: pointer;
       margin-top: 30px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    button:hover {
+      background-color: #ff3333;
+      transform: scale(1.02);
     }
     h1 {
       margin-bottom: 30px;
       font-size: 38px;
       text-align: center;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    }
+    .logo {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      color: red;
+    }
+    
+    /* Estilos do Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.5s;
+    }
+    .modal-content {
+      background-color: #111;
+      padding: 50px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 600px;
+      width: 90%;
+      box-shadow: 0 0 30px red;
+      transform: scale(0.9);
+      animation: scaleUp 0.5s forwards;
+      position: relative;
+    }
+    .modal h2 {
+      color: red;
+      font-size: 42px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 15px rgba(255, 0, 0, 0.7);
+    }
+    .modal p {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+    .modal-icon {
+      font-size: 80px;
+      margin-bottom: 20px;
+      animation: pulse 1.5s infinite;
+    }
+    .cliente-icon {
+      color: #4CAF50; /* Verde para cliente */
+    }
+    .revendedor-icon {
+      color: #FF9800; /* Laranja para revendedor */
+    }
+    .close-modal {
+      background-color: red;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s;
+    }
+    .close-modal:hover {
+      background-color: #ff3333;
+      transform: scale(1.05);
+    }
+    
+    /* Animações */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes scaleUp {
+      to { transform: scale(1); }
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    @media (max-width: 768px) {
+      form {
+        padding: 30px;
+      }
+      input, select, button {
+        padding: 15px;
+        font-size: 18px;
+      }
+      h1 {
+        font-size: 30px;
+      }
+      .modal-content {
+        padding: 30px;
+      }
+      .modal h2 {
+        font-size: 32px;
+      }
+      .modal p {
+        font-size: 20px;
+      }
     }
   </style>
 </head>
 <body>
 
   <form id="cadastroForm">
+    <div class="logo">INFYNIX</div>
     <h1>Cadastro Infynix</h1>
-    <input type="text" id="nome" placeholder="Seu nome" required>
-    <input type="tel" id="telefone" placeholder="Seu telefone" required>
-    <input type="email" id="email" placeholder="Seu Gmail" required>
+    <input type="text" id="nome" placeholder="Seu nome completo" required>
+    <input type="tel" id="telefone" placeholder="Seu telefone com DDD" required>
+    <input type="email" id="email" placeholder="Seu email" required>
     
     <select id="tipo" required>
       <option value="">Selecione o tipo de cadastro</option>
@@ -73,26 +205,71 @@
     <button type="submit">Cadastrar via WhatsApp</button>
   </form>
 
+  <!-- Modal de boas-vindas -->
+  <div id="welcomeModal" class="modal">
+    <div class="modal-content">
+      <div id="modalIcon" class="modal-icon revendedor-icon">🎉</div>
+      <h2 id="modalTitle">Bem-vindo à Equipe Infynix!</h2>
+      <p id="modalMessage">Seu cadastro foi realizado com sucesso. Em breve entraremos em contato pelo WhatsApp.</p>
+      <button class="close-modal">Fechar</button>
+    </div>
+  </div>
+
   <script>
     document.getElementById('cadastroForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
+      // Coletando os dados do formulário
       const nome = document.getElementById('nome').value;
       const telefone = document.getElementById('telefone').value;
       const email = document.getElementById('email').value;
       const tipo = document.getElementById('tipo').value;
       const dataCadastro = new Date().toLocaleDateString('pt-BR');
+      
+      // Formatando a mensagem para o WhatsApp
+      const mensagem = `*NOVO CADASTRO INFYNIX*%0A%0A` +
+                       `*Nome:* ${nome}%0A` +
+                       `*Telefone:* ${telefone}%0A` +
+                       `*Email:* ${email}%0A` +
+                       `*Tipo de cadastro:* ${tipo}%0A` +
+                       `*Data do cadastro:* ${dataCadastro}%0A%0A` +
+                       `_Dados enviados via formulário de cadastro_`;
+      
+      // Número do WhatsApp configurado
+      const numeroWhatsApp = '5515996315518'; // Número formatado sem caracteres especiais
+      
+      // Configura o modal conforme o tipo de cadastro
+      const modalIcon = document.getElementById('modalIcon');
+      const modalTitle = document.getElementById('modalTitle');
+      const modalMessage = document.getElementById('modalMessage');
+      
+      if (tipo === "Cliente") {
+        modalIcon.textContent = "🎬";
+        modalIcon.className = "modal-icon cliente-icon";
+        modalTitle.textContent = "Bem-vindo à Infynix!";
+        modalMessage.textContent = "Aproveite seus filmes, séries e muito mais! Em breve enviaremos seu acesso.";
+      } else {
+        modalIcon.textContent = "🚀";
+        modalIcon.className = "modal-icon revendedor-icon";
+        modalTitle.textContent = "Bem-vindo à Equipe Infynix!";
+        modalMessage.textContent = "Seu cadastro foi recebido com sucesso! Em breve entraremos em contato com os detalhes.";
+      }
+      
+      // Mostra o modal de boas-vindas
+      document.getElementById('welcomeModal').style.display = 'flex';
+      
+      // Abre o WhatsApp após 3 segundos (para dar tempo do usuário ver a mensagem)
+      setTimeout(() => {
+        window.open(`https://wa.me/${numeroWhatsApp}?text=${mensagem}`, '_blank');
+      }, 3000);
+      
+      // Limpa o formulário
+      this.reset();
+    });
 
-      const mensagem = `Olá! Quero me cadastrar na Infynix.%0A` +
-                       `Nome: ${nome}%0A` +
-                       `Telefone: ${telefone}%0A` +
-                       `Gmail: ${email}%0A` +
-                       `Tipo: ${tipo}%0A` +
-                       `Data do cadastro: ${dataCadastro}`;
-
-      const link = `https://wa.me/message/S7DCBIS57QDDI1?text=${mensagem}`;
-
-      window.open(link, '_blank');
+    // Fechar o modal quando clicar no botão
+    document.querySelector('.close-modal').addEventListener('click', function() {
+      document.getElementById('welcomeModal').style.display = 'none';
     });
   </script>
 
