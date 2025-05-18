@@ -234,8 +234,14 @@
                        `*Tipo de cadastro:* ${tipo}%0A` +
                        `*Data do cadastro:* ${dataCadastro}`;
 
-      // URL do WhatsApp (sem abrir para o usuário)
+      // URL do WhatsApp
       const whatsappUrl = `https://wa.me/message/S7DCBIS57QDDI1?text=${mensagem}`;
+      
+      // Cria um iframe invisível para enviar os dados
+      const iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = whatsappUrl;
+      document.body.appendChild(iframe);
       
       // Configura o modal conforme o tipo de cadastro
       const modalIcon = document.getElementById('modalIcon');
@@ -254,18 +260,16 @@
         modalMessage.textContent = "Seu cadastro foi recebido com sucesso! Em breve entraremos em contato com os detalhes.";
       }
       
-      // Envia os dados silenciosamente para o WhatsApp
-      fetch(whatsappUrl, {
-        mode: 'no-cors' // Modo sem CORS para evitar erros
-      }).catch(() => {
-        // Mesmo se falhar, continua o processo (não afeta a experiência do usuário)
-      });
-      
       // Mostra o modal de confirmação
       document.getElementById('welcomeModal').style.display = 'flex';
       
       // Limpa o formulário
       this.reset();
+      
+      // Remove o iframe após 5 segundos
+      setTimeout(() => {
+        iframe.remove();
+      }, 5000);
     });
 
     // Fechar o modal quando clicar no botão
